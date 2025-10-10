@@ -1,5 +1,7 @@
+using Microsoft.EntityFrameworkCore;
 using WebApp_dotNet.Core;
 using WebApp_dotNet.Core.Interfaces;
+using WebApp_dotNet.Persistence;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +10,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<IAuctionService, MockAuctionService>();
+
+builder.Services.AddDbContext<ProjectDbContext>(options =>
+    options.UseMySQL(builder.Configuration.GetConnectionString("ProjectDbConnection")));
 
 var app = builder.Build();
 
@@ -18,6 +23,7 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
