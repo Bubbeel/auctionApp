@@ -30,7 +30,11 @@ namespace WebApp_dotNet.Controllers
         // GET: AuctionsController/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            Auction auction = _auctionService.GetById(id, "Bob");
+            if (auction == null) return BadRequest(); //HTTP 400
+            
+            AuctionDetailsVm detailsVM = AuctionDetailsVm.FromAuction(auction);
+            return View(detailsVM);
         }
 
         // GET: AuctionsController/Create

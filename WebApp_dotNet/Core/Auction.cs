@@ -17,10 +17,11 @@ public class Auction
     private DateTime DescriptionLastUpdated{get => descriptionLastUpdated;}
 
     public int StartingPrice { get; set; }
+    public int CurrentPrice { get; set; }
     public bool IsCompleted { get; set; }
 
     private List<Bid> _bids = new List<Bid>();
-    public IEnumerable<Bid> Bid => _bids;
+    public IEnumerable<Bid> Bids => _bids;
 
     public Auction(string title, string username)
     {
@@ -36,6 +37,12 @@ public class Auction
         CreatedDate = createdDate;
         Username = username;
     }
+
+    public void AddBid(Bid newBid)
+    {
+        _bids.Add(newBid);
+    }
+    
     // public bool IsCompleted()
     // {
     //     
