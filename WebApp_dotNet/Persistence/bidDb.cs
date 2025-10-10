@@ -4,7 +4,7 @@ using WebApp_dotNet.Core;
 
 namespace WebApp_dotNet.Persistence;
 
-public class TaskDb
+public class bidDb
 {
     [Key]
     public int Id { get; set; }
@@ -22,7 +22,7 @@ public class TaskDb
     
     //FK and navigation property
     [ForeignKey("ProjectId")]
-    public ProjectDb ProjectDB { get; set; }
+    public AuctionDb AuctionDb { get; set; }
     
     public int ProjectId { get; set; }
     

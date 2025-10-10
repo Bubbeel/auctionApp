@@ -4,10 +4,10 @@ using WebApp_dotNet.Persistence;
 
 namespace WebApp_dotNet.Mappers;
 
-public class ProjectProfile : Profile
+public class AuctionProfile : Profile
 {
-    public ProjectProfile()
+    public AuctionProfile()
     {
-        CreateMap<ProjectDb, Auction>().ReverseMap();
+        CreateMap<AuctionDb, Auction>().ReverseMap();
     }
 }

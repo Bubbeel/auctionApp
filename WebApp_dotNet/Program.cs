@@ -9,12 +9,14 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddScoped<IAuctionService, MockAuctionService>();
+builder.Services.AddScoped<IAuctionService, AuctionService>();
 
-builder.Services.AddDbContext<ProjectDbContext>(options =>
+builder.Services.AddDbContext<AuctionDbContext>(options =>
     options.UseMySQL(builder.Configuration.GetConnectionString("ProjectDbConnection")));
 
 builder.Services.AddAutoMapper(typeof(Program));
+
+builder.Services.AddScoped<IAuctionPersistence, MySqlAuctionPersitence>(); 
 
 var app = builder.Build();
 

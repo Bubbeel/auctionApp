@@ -1,6 +1,6 @@
 namespace WebApp_dotNet.Core.Interfaces;
 
-public interface IAuctionService
+public interface IAuctionService : IAuctionPersistence
 {
     
     List<Auction> GetAllByUserName(string username);

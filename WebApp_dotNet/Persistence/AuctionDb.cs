@@ -2,7 +2,7 @@
 
 namespace WebApp_dotNet.Persistence;
 
-public class ProjectDb
+public class AuctionDb
 {
     [Key]
     public int Id { get; set; }
@@ -19,5 +19,5 @@ public class ProjectDb
     public DateTime CreatedDate { get; set; }
     
     //navigation property
-    public List<TaskDb> TaskDBs { get; set; } = new List<TaskDb>();
+    public List<bidDb> BidDbs { get; set; } = new List<bidDb>();
 }
