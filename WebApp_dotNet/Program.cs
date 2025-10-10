@@ -14,6 +14,8 @@ builder.Services.AddScoped<IAuctionService, MockAuctionService>();
 builder.Services.AddDbContext<ProjectDbContext>(options =>
     options.UseMySQL(builder.Configuration.GetConnectionString("ProjectDbConnection")));
 
+builder.Services.AddAutoMapper(typeof(Program));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
