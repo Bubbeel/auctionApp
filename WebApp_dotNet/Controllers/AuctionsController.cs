@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApp_dotNet.Core;
 using WebApp_dotNet.Core.Interfaces;
@@ -5,6 +6,7 @@ using WebApp_dotNet.Models.Auctions;
 
 namespace WebApp_dotNet.Controllers
 {
+    [Authorize]
     public class AuctionsController : Controller
     {
         
@@ -18,7 +20,7 @@ namespace WebApp_dotNet.Controllers
         // GET: AuctionsController
         public ActionResult Index()
         {
-            List<Auction> auctions = _auctionService.GetAllByUserName("Bob");
+            List<Auction> auctions = _auctionService.GetAllByUserName(User.Identity.Name);
             List<AuctionVm> auctionVms = new List<AuctionVm>();
             foreach (Auction auction in auctions)
             {
@@ -30,7 +32,7 @@ namespace WebApp_dotNet.Controllers
         // GET: AuctionsController/Details/5
         public ActionResult Details(int id)
         {
-            Auction auction = _auctionService.GetById(id, "Bob");
+            Auction auction = _auctionService.GetById(id, User.Identity.Name);
             if (auction == null) return BadRequest(); //HTTP 400
             
             AuctionDetailsVm detailsVM = AuctionDetailsVm.FromAuction(auction);

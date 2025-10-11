@@ -2,6 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using WebApp_dotNet.Core;
 using WebApp_dotNet.Core.Interfaces;
 using WebApp_dotNet.Persistence;
+using Microsoft.AspNetCore.Identity;
+using WebApp_dotNet.Areas.Identity.Data.WebApp_dotNetUser;
+using WebApp_dotNet.Data;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +16,11 @@ builder.Services.AddScoped<IAuctionService, AuctionService>();
 
 builder.Services.AddDbContext<AuctionDbContext>(options =>
     options.UseMySQL(builder.Configuration.GetConnectionString("ProjectDbConnection")));
+
+builder.Services.AddDbContext<AppIdentityDbContext>(options =>    
+    options.UseMySQL(builder.Configuration.GetConnectionString("IdentityDbConnection")));
+builder.Services.AddDefaultIdentity<AppIdentityUser>(options => 
+    options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<AppIdentityDbContext>();
 
 builder.Services.AddAutoMapper(typeof(Program));
 
@@ -35,6 +43,8 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.MapRazorPages();
 
 app.MapControllerRoute(
     name: "default",
