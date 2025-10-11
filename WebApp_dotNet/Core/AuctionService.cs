@@ -8,6 +8,11 @@ namespace WebApp_dotNet.Core;
 public class AuctionService : IAuctionService
 {
     private readonly IAuctionPersistence _auctionPersistence;
+
+    public AuctionService(IAuctionPersistence auctionPersistence)
+    {
+        _auctionPersistence = auctionPersistence;
+    }
     public List<Auction> GetAllByUserName(string username)
     {
         List<Auction> auctions = _auctionPersistence.GetAllByUserName(username);

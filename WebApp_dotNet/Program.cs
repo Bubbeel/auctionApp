@@ -14,9 +14,9 @@ builder.Services.AddScoped<IAuctionService, AuctionService>();
 builder.Services.AddDbContext<AuctionDbContext>(options =>
     options.UseMySQL(builder.Configuration.GetConnectionString("ProjectDbConnection")));
 
-builder.Services.AddAutoMapper(typeof(Program));
-
 builder.Services.AddScoped<IAuctionPersistence, MySqlAuctionPersitence>(); 
+
+builder.Services.AddAutoMapper(typeof(Program));
 
 var app = builder.Build();
 
