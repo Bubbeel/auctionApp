@@ -4,26 +4,23 @@ using WebApp_dotNet.Core;
 
 namespace WebApp_dotNet.Persistence;
 
-public class bidDb
+public class BidDb
 {
     [Key]
     public int Id { get; set; }
     
     [Required]
-    [MaxLength(256)]
-    public String Description { get; set; }
+    [StringLength(128)]
+    public string Username { get; set; }
     
     [Required]
     [DataType(DataType.DateTime)]
-    public DateTime LastUpdated { get; set; }
-    
-    [Required]
-    public Status status { get; set; }
+    public DateTime DateAdded { get; set; }
     
     //FK and navigation property
-    [ForeignKey("ProjectId")]
+    [ForeignKey("AuctionId")]
     public AuctionDb AuctionDb { get; set; }
     
-    public int ProjectId { get; set; }
+    public int AuctionId { get; set; }
     
 }

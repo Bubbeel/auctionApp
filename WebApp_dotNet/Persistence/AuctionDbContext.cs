@@ -9,7 +9,7 @@ public class AuctionDbContext : DbContext
     {
     }
 
-    public DbSet<bidDb> TaskDbs { get; set; }
+    public DbSet<BidDb> BidDbs { get; set; }
     public DbSet<AuctionDb> AuctionDbs { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -18,30 +18,22 @@ public class AuctionDbContext : DbContext
         {
             Id = -1, //seed data
             Title = "Learn ASP.NET Core with MVC",
+            Description = "If you want to learn more, you know where to look! Ehe!",
             CreatedDate = DateTime.Now,
+            StartingPrice = 300,
             UserName = "Bob@kth.se",
-            BidDbs = new List<bidDb>()
+            EndDate = new DateTime(2077, 07, 20),
+            BidDbs = new List<BidDb>()
         };
         modelBuilder.Entity<AuctionDb>().HasData(pdb);
 
-        bidDb tdb1 = new bidDb()
+        BidDb tdb1 = new BidDb()
         {
             Id = -1, //seed data
-            Description = "Follow the tutorials",
-            LastUpdated = DateTime.Now,
-            status = Core.Status.IN_PROGRESS,
-            ProjectId = -1
+            DateAdded = DateTime.Now,
+            AuctionId = -1,
+            Username = "Bob@kth.se"
         };
-        modelBuilder.Entity<bidDb>().HasData(tdb1);
-
-        bidDb tdb2 = new bidDb()
-        {
-            Id = -2, //seed data
-            Description = "Do it yourself!",
-            LastUpdated = DateTime.Now,
-            status = Core.Status.DONE,
-            ProjectId = -1
-        };
-        modelBuilder.Entity<bidDb>().HasData(tdb2);
+        modelBuilder.Entity<BidDb>().HasData(tdb1);
     }
 }

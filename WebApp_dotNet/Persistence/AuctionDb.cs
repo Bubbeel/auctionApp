@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.VisualBasic.CompilerServices;
 
 namespace WebApp_dotNet.Persistence;
 
@@ -12,12 +13,24 @@ public class AuctionDb
     public string Title { get; set; }
     
     [Required]
-    public String UserName { get; set; }
+    public string UserName { get; set; }
+    
+    [Required]
+    [MaxLength(512)]
+    public string Description { get; set; }
+    
+    [Required]
+    [DataType(DataType.Currency)]
+    public int StartingPrice { get; set; }
     
     [Required]
     [DataType(DataType.DateTime)]
     public DateTime CreatedDate { get; set; }
     
+    [Required]
+    [DataType(DataType.DateTime)]
+    public DateTime EndDate { get; set; }
+    
     //navigation property
-    public List<bidDb> BidDbs { get; set; } = new List<bidDb>();
+    public List<BidDb> BidDbs { get; set; } = new List<BidDb>();
 }

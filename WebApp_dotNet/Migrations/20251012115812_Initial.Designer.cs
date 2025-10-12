@@ -10,8 +10,8 @@ using WebApp_dotNet.Persistence;
 
 namespace WebApp_dotNet.Migrations
 {
-    [DbContext(typeof(ProjectDbContext))]
-    [Migration("20251010101107_Initial")]
+    [DbContext(typeof(AuctionDbContext))]
+    [Migration("20251012115812_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -19,10 +19,10 @@ namespace WebApp_dotNet.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.8")
+                .HasAnnotation("ProductVersion", "8.0.20")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("WebApp_dotNet.Persistence.ProjectDb", b =>
+            modelBuilder.Entity("WebApp_dotNet.Persistence.AuctionDb", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -30,6 +30,17 @@ namespace WebApp_dotNet.Migrations
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .HasColumnType("varchar(512)");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("StartingPrice")
+                        .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -42,77 +53,68 @@ namespace WebApp_dotNet.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProjectDbs");
+                    b.ToTable("AuctionDbs");
 
                     b.HasData(
                         new
                         {
                             Id = -1,
-                            CreatedDate = new DateTime(2025, 10, 10, 12, 11, 6, 635, DateTimeKind.Local).AddTicks(6653),
+                            CreatedDate = new DateTime(2025, 10, 12, 13, 58, 12, 242, DateTimeKind.Local).AddTicks(8954),
+                            Description = "If you want to learn more, you know where to look! Ehe!",
+                            EndDate = new DateTime(2077, 7, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            StartingPrice = 300,
                             Title = "Learn ASP.NET Core with MVC",
                             UserName = "Bob@kth.se"
                         });
                 });
 
-            modelBuilder.Entity("WebApp_dotNet.Persistence.TaskDb", b =>
+            modelBuilder.Entity("WebApp_dotNet.Persistence.BidDb", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("varchar(256)");
+                    b.Property<int>("AuctionId")
+                        .HasColumnType("int");
 
-                    b.Property<DateTime>("LastUpdated")
+                    b.Property<DateTime>("DateAdded")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("ProjectId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("status")
-                        .HasColumnType("int");
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("varchar(128)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProjectId");
+                    b.HasIndex("AuctionId");
 
-                    b.ToTable("TaskDbs");
+                    b.ToTable("BidDbs");
 
                     b.HasData(
                         new
                         {
                             Id = -1,
-                            Description = "Follow the tutorials",
-                            LastUpdated = new DateTime(2025, 10, 10, 12, 11, 6, 635, DateTimeKind.Local).AddTicks(6937),
-                            ProjectId = -1,
-                            status = 0
-                        },
-                        new
-                        {
-                            Id = -2,
-                            Description = "Do it yourself!",
-                            LastUpdated = new DateTime(2025, 10, 10, 12, 11, 6, 635, DateTimeKind.Local).AddTicks(6973),
-                            ProjectId = -1,
-                            status = 1
+                            AuctionId = -1,
+                            DateAdded = new DateTime(2025, 10, 12, 13, 58, 12, 242, DateTimeKind.Local).AddTicks(9147),
+                            Username = "Bob@kth.se"
                         });
                 });
 
-            modelBuilder.Entity("WebApp_dotNet.Persistence.TaskDb", b =>
+            modelBuilder.Entity("WebApp_dotNet.Persistence.BidDb", b =>
                 {
-                    b.HasOne("WebApp_dotNet.Persistence.ProjectDb", "ProjectDB")
-                        .WithMany("TaskDBs")
-                        .HasForeignKey("ProjectId")
+                    b.HasOne("WebApp_dotNet.Persistence.AuctionDb", "AuctionDb")
+                        .WithMany("BidDbs")
+                        .HasForeignKey("AuctionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ProjectDB");
+                    b.Navigation("AuctionDb");
                 });
 
-            modelBuilder.Entity("WebApp_dotNet.Persistence.ProjectDb", b =>
+            modelBuilder.Entity("WebApp_dotNet.Persistence.AuctionDb", b =>
                 {
-                    b.Navigation("TaskDBs");
+                    b.Navigation("BidDbs");
                 });
 #pragma warning restore 612, 618
         }

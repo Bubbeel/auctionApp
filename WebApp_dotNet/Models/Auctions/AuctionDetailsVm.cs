@@ -11,10 +11,14 @@ public class AuctionDetailsVm
     public string Title { get; set; }
     [Display(Name = "Description")]
     public string Description { get; set; }
-    [Display(Name = "Price")]
+    [Display(Name = "Starting Price")]
     public string StartingPrice { get; set; }
     [Display(Name = "Created date")]
     public DateTime CreatedDate { get; set; }
+    [Display(Name = "Created by")]
+    public string Username { get; set; }
+    [Display(Name = "End date")]
+    public DateTime EndDate { get; set; }
     public bool IsCompleted { get; set; }
 
     public List<BidVm> BidVms { get; set; } = new();
@@ -27,6 +31,9 @@ public class AuctionDetailsVm
             Title = auction.Title,
             Description = auction.Description,
             CreatedDate = auction.CreatedDate,
+            StartingPrice = auction.StartingPrice.ToString(),
+            Username = auction.Username,
+            EndDate = auction.EndDate,
             IsCompleted = auction.IsCompleted,
 
         };

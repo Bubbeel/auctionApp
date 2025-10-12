@@ -7,6 +7,6 @@ public class TaskProfile : Profile
 {
     public TaskProfile()
     {
-        CreateMap<bidDb, Task>().ReverseMap();
+        CreateMap<BidDb, Task>().ReverseMap();
     }
 }

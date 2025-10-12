@@ -13,8 +13,6 @@ public class Auction
     public string Username { get; set; }
     
     public string Description { get; set; }
-    public DateTime descriptionLastUpdated;
-    private DateTime DescriptionLastUpdated{get => descriptionLastUpdated;}
 
     public int StartingPrice { get; set; }
     public int CurrentPrice { get; set; }
@@ -30,12 +28,14 @@ public class Auction
         Username = username;
     }
 
-    public Auction(int id, string title, string username, DateTime createdDate)
+    public Auction(string title, string username, string description, int startingPrice, DateTime endDate)
     {
-        Id = id;
         Title = title;
-        CreatedDate = createdDate;
+        CreatedDate = DateTime.Now;
         Username = username;
+        Description = description;
+        StartingPrice = startingPrice;
+        EndDate = endDate;
     }
 
     public void AddBid(Bid newBid)

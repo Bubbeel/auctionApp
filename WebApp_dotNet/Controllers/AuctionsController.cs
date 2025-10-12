@@ -48,15 +48,27 @@ namespace WebApp_dotNet.Controllers
         // POST: AuctionsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(CreateAuctionVms createAuctionVms)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    string title = createAuctionVms.Title;
+                    string description = createAuctionVms.Description;
+                    int startPrice = createAuctionVms.StartingPrice;
+                    DateTime endDate = createAuctionVms.EndDate;
+                    string username = User.Identity.Name;
+                    Console.WriteLine("bip");
+                    _auctionService.Add(username, title, description, startPrice, endDate);
+                    Console.WriteLine("bop");
+                    return RedirectToAction("Index");
+                }
+                return View(createAuctionVms);
             }
-            catch
+            catch //data exception?
             {
-                return View();
+                return View(createAuctionVms);
             }
         }
 

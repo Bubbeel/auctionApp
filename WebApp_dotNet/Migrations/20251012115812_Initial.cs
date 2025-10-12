@@ -4,8 +4,6 @@ using MySql.EntityFrameworkCore.Metadata;
 
 #nullable disable
 
-#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
-
 namespace WebApp_dotNet.Migrations
 {
     /// <inheritdoc />
@@ -18,72 +16,70 @@ namespace WebApp_dotNet.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "ProjectDbs",
+                name: "AuctionDbs",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     Title = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false),
                     UserName = table.Column<string>(type: "longtext", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                    Description = table.Column<string>(type: "varchar(512)", maxLength: 512, nullable: false),
+                    StartingPrice = table.Column<int>(type: "int", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "datetime(6)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProjectDbs", x => x.Id);
+                    table.PrimaryKey("PK_AuctionDbs", x => x.Id);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "TaskDbs",
+                name: "BidDbs",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Description = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: false),
-                    LastUpdated = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    status = table.Column<int>(type: "int", nullable: false),
-                    ProjectId = table.Column<int>(type: "int", nullable: false)
+                    Username = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false),
+                    DateAdded = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    AuctionId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TaskDbs", x => x.Id);
+                    table.PrimaryKey("PK_BidDbs", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TaskDbs_ProjectDbs_ProjectId",
-                        column: x => x.ProjectId,
-                        principalTable: "ProjectDbs",
+                        name: "FK_BidDbs_AuctionDbs_AuctionId",
+                        column: x => x.AuctionId,
+                        principalTable: "AuctionDbs",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.InsertData(
-                table: "ProjectDbs",
-                columns: new[] { "Id", "CreatedDate", "Title", "UserName" },
-                values: new object[] { -1, new DateTime(2025, 10, 10, 11, 30, 15, 131, DateTimeKind.Local).AddTicks(1940), "Learn ASP.NET Core with MVC", "Bob@kth.se" });
+                table: "AuctionDbs",
+                columns: new[] { "Id", "CreatedDate", "Description", "EndDate", "StartingPrice", "Title", "UserName" },
+                values: new object[] { -1, new DateTime(2025, 10, 12, 13, 58, 12, 242, DateTimeKind.Local).AddTicks(8954), "If you want to learn more, you know where to look! Ehe!", new DateTime(2077, 7, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), 300, "Learn ASP.NET Core with MVC", "Bob@kth.se" });
 
             migrationBuilder.InsertData(
-                table: "TaskDbs",
-                columns: new[] { "Id", "Description", "LastUpdated", "ProjectId", "status" },
-                values: new object[,]
-                {
-                    { -2, "Do it yourself!", new DateTime(2025, 10, 10, 11, 30, 15, 131, DateTimeKind.Local).AddTicks(3392), -1, 1 },
-                    { -1, "Follow the tutorials", new DateTime(2025, 10, 10, 11, 30, 15, 131, DateTimeKind.Local).AddTicks(3308), -1, 0 }
-                });
+                table: "BidDbs",
+                columns: new[] { "Id", "AuctionId", "DateAdded", "Username" },
+                values: new object[] { -1, -1, new DateTime(2025, 10, 12, 13, 58, 12, 242, DateTimeKind.Local).AddTicks(9147), "Bob@kth.se" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_TaskDbs_ProjectId",
-                table: "TaskDbs",
-                column: "ProjectId");
+                name: "IX_BidDbs_AuctionId",
+                table: "BidDbs",
+                column: "AuctionId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "TaskDbs");
+                name: "BidDbs");
 
             migrationBuilder.DropTable(
-                name: "ProjectDbs");
+                name: "AuctionDbs");
         }
     }
 }

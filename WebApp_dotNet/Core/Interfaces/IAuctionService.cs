@@ -7,5 +7,5 @@ public interface IAuctionService : IAuctionPersistence
     
     Auction GetById(int auctionId, string username);
 
-    void Add(string username, string title);
+    void Add(string username, string title, string description, int startPrice, DateTime endDate);
 }
