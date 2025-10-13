@@ -6,5 +6,6 @@ public interface IAuctionPersistence
     List<Auction> GetAll();
     Auction GetById(int id, String  userName);
     Auction GetById(int id);
-    void Save(Auction auction);
+    void SaveAuction(Auction auction);
+    void SaveBid(Bid bid);
 }

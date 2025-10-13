@@ -55,7 +55,7 @@ namespace WebApp_dotNet.Controllers
             Auction auction = _auctionService.GetById(id);
             if (auction == null) return BadRequest();
             
-            AuctionDetailsVm  detailsVM = AuctionDetailsVm.FromAuction(auction);
+            AuctionDetailsVm detailsVM = AuctionDetailsVm.FromAuction(auction);
             return View(detailsVM);
         }
 
@@ -90,32 +90,36 @@ namespace WebApp_dotNet.Controllers
             }
         }
 
-        public ActionResult AddBid()
+        public ActionResult AddBid(int auctionId, int currentPrice)
         {
-            return View();
+            CreateBidVms createBidVms = new CreateBidVms();
+            createBidVms.AuctionId = auctionId;
+            createBidVms.CurrPrice = currentPrice;
+            return View(createBidVms);
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AddBid(int bidAmount, int currentPrice)
+        public ActionResult AddBid(CreateBidVms createBidVms)
         {
-            if (bidAmount < currentPrice)
-            {
-                return RedirectToAction("Index");
-            }
             try
             {
                 if (ModelState.IsValid)
                 {
-                    
+                    if (createBidVms.Amount > createBidVms.CurrPrice)
+                    {
+                        Console.Out.WriteLine("yuh uh" +  createBidVms.Amount + " and " + createBidVms.CurrPrice + " plus " + createBidVms.AuctionId);
+                        _auctionService.AddBid(createBidVms.AuctionId, User.Identity.Name, createBidVms.Amount);
+                        return RedirectToAction("IndexAll");
+                    }
                 }
             }
             catch
             {
-                return View("Error");
+                return View(createBidVms);
             }
-            
-            return View();
+            return View(createBidVms);
         }
 
         // GET: AuctionsController/Edit/5

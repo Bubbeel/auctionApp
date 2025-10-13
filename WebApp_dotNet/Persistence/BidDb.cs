@@ -14,6 +14,9 @@ public class BidDb
     public string Username { get; set; }
     
     [Required]
+    public int Amount { get; set; }
+    
+    [Required]
     [DataType(DataType.DateTime)]
     public DateTime DateAdded { get; set; }
     

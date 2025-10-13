@@ -28,13 +28,14 @@ public class AuctionDbContext : DbContext
         };
         modelBuilder.Entity<AuctionDb>().HasData(pdb);
 
-        BidDb tdb1 = new BidDb()
+        BidDb bdb1 = new BidDb()
         {
             Id = -1, //seed data
             DateAdded = DateTime.Now,
             AuctionId = -1,
-            Username = "Bob@kth.se"
+            Username = "Bob@kth.se",
+            Amount = 400
         };
-        modelBuilder.Entity<BidDb>().HasData(tdb1);
+        modelBuilder.Entity<BidDb>().HasData(bdb1);
     }
 }

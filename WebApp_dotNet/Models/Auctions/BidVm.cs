@@ -14,6 +14,10 @@ public class BidVm
     public DateTime CreatedAt { get; set; }
     
     public int Amount { get; set; }
+    
+    public int CurrAmount { get; set; }
+
+    public int AuctionId { get; set; }
 
     public static BidVm FromBid(Bid bid)
     {

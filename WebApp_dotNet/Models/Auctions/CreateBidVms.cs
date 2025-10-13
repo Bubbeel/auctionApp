@@ -7,4 +7,8 @@ public class CreateBidVms
     [Required]
     [Range(100, int.MaxValue)]
     public int Amount { get; set; }
+    
+    public int CurrPrice { get; set; }
+    
+    public int AuctionId { get; set; }
 }

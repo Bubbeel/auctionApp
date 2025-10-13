@@ -8,17 +8,20 @@
 
 <h4>CreateBidVms</h4>
 <hr />
+<p>Current price: <strong>@Model.CurrPrice</strong></p>
 <div class="row">
     <div class="col-md-4">
         <form asp-action="AddBid">
+            <input type="hidden" asp-for="CurrPrice" />
+            <input type="hidden" asp-for="AuctionId" />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Amount" class="control-label"></label>
-                <input asp-for="Amount" class="form-control" />
+                <input asp-for="Amount" class="form-control"/>
                 <span asp-validation-for="Amount" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Create" class="btn btn-primary"/>
             </div>
         </form>
     </div>

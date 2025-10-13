@@ -70,10 +70,22 @@ public class MySqlAuctionPersitence : IAuctionPersistence
         return auction;
     }
 
-    public void Save(Auction auction)
+    public void SaveAuction(Auction auction)
     {
         AuctionDb adb = _mapper.Map<AuctionDb>(auction);
         _dbContext.AuctionDbs.Add(adb);
         _dbContext.SaveChanges();
     }
+
+    public void SaveBid(Bid bid)
+    {
+        Console.Out.WriteLine("Before mapper");
+        BidDb bidDb = _mapper.Map<BidDb>(bid);
+        Console.Out.WriteLine("After mapper");
+        _dbContext.BidDbs.Add(bidDb);
+        Console.Out.WriteLine("Saving to database...");
+        _dbContext.SaveChanges();
+    }
+    
+    
 }

@@ -45,13 +45,27 @@ public class AuctionService : IAuctionService
         if (title == null || title.Length > 128) throw new ArgumentNullException(nameof(title));
 
         Auction auction = new Auction(title, username, description, startPrice, endDate);
-        _auctionPersistence.Save(auction);
+        _auctionPersistence.SaveAuction(auction);
     }
+
+    public void AddBid(int auctionId, string username, int amount)
+    {
+        if (username == null) throw new ArgumentNullException(nameof(username));
+        if (amount <= 0) throw new ArgumentOutOfRangeException(nameof(amount));
+
+        Bid bid = new Bid(username, amount, auctionId);
+        Console.Out.WriteLine("Auction Service is adding bid...");
+        _auctionPersistence.SaveBid(bid);
+    }
+    
     private static readonly List<Auction> _auctions = new();
 
-    public void Save(Auction auction)
+    public void SaveAuction(Auction auction)
     {
-        
+    }
+
+    public void SaveBid(Bid bid)
+    {
     }
     
 }

@@ -54,9 +54,10 @@
         </dd>
     </dl>
 </div>
-<div>
+    <div>
     <a asp-action="Index">Back to List</a>
-    @Html.ActionLink("AddBid", "AddBid", new { currPrice = Model.CurrentPrice })</div>
+    @Html.ActionLink("AddBid", "AddBid", new { AuctionId = Model.Id, currentPrice = Model.CurrentPrice })
+    </div>
 <p/>
 <div>
     <h4>Bids</h4>
