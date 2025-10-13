@@ -14,6 +14,13 @@ public class AuctionVm
     [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm}")]
     public DateTime CreatedDate { get; set; }
     
+    [Display(Name = "End date")]
+    [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm}")]
+    public DateTime EndDate { get; set; }
+    
+    [Display(Name = "Current Price")]
+    public int CurrentPrice { get; set; }
+    
     public bool IsCompleted { get; set; }
 
     public static AuctionVm FromAuction(Auction auction)
@@ -23,6 +30,8 @@ public class AuctionVm
             Id = auction.Id,
             Title = auction.Title,
             CreatedDate = auction.CreatedDate,
+            EndDate =  auction.EndDate,
+            CurrentPrice = auction.CurrentPrice,
             IsCompleted = auction.IsCompleted
         };
     }

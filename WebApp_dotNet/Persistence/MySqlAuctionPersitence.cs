@@ -20,9 +20,21 @@ public class MySqlAuctionPersitence : IAuctionPersistence
     {
         var auctionDbs = _dbContext.AuctionDbs.Where(p => p.UserName == userName).ToList();
         List<Auction> results = new List<Auction>();
-        foreach (AuctionDb pdb in auctionDbs)
+        foreach (AuctionDb adb in auctionDbs)
         {
-            Auction auction =  _mapper.Map<Auction>(pdb);
+            Auction auction =  _mapper.Map<Auction>(adb);
+            results.Add(auction);
+        }
+        return results;
+    }
+
+    public List<Auction> GetAll()
+    {
+        var auctionDbs = _dbContext.AuctionDbs.ToList();
+        List<Auction> results = new List<Auction>();
+        foreach (AuctionDb adb in auctionDbs)
+        {
+            Auction auction = _mapper.Map<Auction>(adb);
             results.Add(auction);
         }
         return results;
@@ -30,7 +42,23 @@ public class MySqlAuctionPersitence : IAuctionPersistence
 
     public Auction GetById(int id, String userName) //to be done, a bit confused on implementation
     {
-        AuctionDb auctionDb = _dbContext.AuctionDbs.Where(p => p.Id == id && p.UserName.Equals(userName)).Include(p => p.BidDbs).FirstOrDefault();
+        AuctionDb auctionDb = _dbContext.AuctionDbs.Where(a => a.Id == id && a.UserName.Equals(userName)).Include(a => a.BidDbs).FirstOrDefault();
+        if (auctionDb == null) throw new Exception("Auction not found");
+        
+        Auction auction = _mapper.Map<Auction>(auctionDb);
+        foreach (var bidDb in auctionDb.BidDbs)
+        {
+            Bid bid =  _mapper.Map<Bid>(bidDb);
+            auction.AddBid(bid);
+        }
+        return auction;
+    }
+    
+    //this is supposed to get the details of the auction we clicked "details" on, so that
+    //everybody can see the details of the auction, might be wrong
+    public Auction GetById(int id) //to be done, a bit confused on implementation
+    {
+        AuctionDb auctionDb = _dbContext.AuctionDbs.Where(a => a.Id == id).FirstOrDefault();
         if (auctionDb == null) throw new Exception("Auction not found");
         
         Auction auction = _mapper.Map<Auction>(auctionDb);

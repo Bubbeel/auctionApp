@@ -24,6 +24,10 @@ public class AuctionDb
     public int StartingPrice { get; set; }
     
     [Required]
+    [DataType(DataType.Currency)]
+    public int CurrentPrice { get; set; }
+    
+    [Required]
     [DataType(DataType.DateTime)]
     public DateTime CreatedDate { get; set; }
     

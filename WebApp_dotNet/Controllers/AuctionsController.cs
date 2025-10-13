@@ -28,6 +28,17 @@ namespace WebApp_dotNet.Controllers
             }
             return View(auctionVms);
         }
+        
+        public ActionResult IndexAll()
+        {
+            List<Auction> auctions = _auctionService.GetAll();
+            List<AuctionVm> auctionVms = new List<AuctionVm>();
+            foreach (Auction auction in auctions)
+            {
+                auctionVms.Add(AuctionVm.FromAuction(auction));
+            }
+            return View(auctionVms);
+        }
 
         // GET: AuctionsController/Details/5
         public ActionResult Details(int id)
@@ -36,6 +47,15 @@ namespace WebApp_dotNet.Controllers
             if (auction == null) return BadRequest(); //HTTP 400
             
             AuctionDetailsVm detailsVM = AuctionDetailsVm.FromAuction(auction);
+            return View(detailsVM);
+        }
+
+        public ActionResult DetailsNonCreator(int id)
+        {
+            Auction auction = _auctionService.GetById(id);
+            if (auction == null) return BadRequest();
+            
+            AuctionDetailsVm  detailsVM = AuctionDetailsVm.FromAuction(auction);
             return View(detailsVM);
         }
 
@@ -59,9 +79,7 @@ namespace WebApp_dotNet.Controllers
                     int startPrice = createAuctionVms.StartingPrice;
                     DateTime endDate = createAuctionVms.EndDate;
                     string username = User.Identity.Name;
-                    Console.WriteLine("bip");
                     _auctionService.Add(username, title, description, startPrice, endDate);
-                    Console.WriteLine("bop");
                     return RedirectToAction("Index");
                 }
                 return View(createAuctionVms);
@@ -70,6 +88,34 @@ namespace WebApp_dotNet.Controllers
             {
                 return View(createAuctionVms);
             }
+        }
+
+        public ActionResult AddBid()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddBid(int bidAmount, int currentPrice)
+        {
+            if (bidAmount < currentPrice)
+            {
+                return RedirectToAction("Index");
+            }
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    
+                }
+            }
+            catch
+            {
+                return View("Error");
+            }
+            
+            return View();
         }
 
         // GET: AuctionsController/Edit/5

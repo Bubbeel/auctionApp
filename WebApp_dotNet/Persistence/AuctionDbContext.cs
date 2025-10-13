@@ -21,6 +21,7 @@ public class AuctionDbContext : DbContext
             Description = "If you want to learn more, you know where to look! Ehe!",
             CreatedDate = DateTime.Now,
             StartingPrice = 300,
+            CurrentPrice = 300,
             UserName = "Bob@kth.se",
             EndDate = new DateTime(2077, 07, 20),
             BidDbs = new List<BidDb>()

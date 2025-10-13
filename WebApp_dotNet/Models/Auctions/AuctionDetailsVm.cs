@@ -13,6 +13,8 @@ public class AuctionDetailsVm
     public string Description { get; set; }
     [Display(Name = "Starting Price")]
     public string StartingPrice { get; set; }
+    [Display(Name = "Current Price")]
+    public string CurrentPrice { get; set; }
     [Display(Name = "Created date")]
     public DateTime CreatedDate { get; set; }
     [Display(Name = "Created by")]
@@ -32,6 +34,7 @@ public class AuctionDetailsVm
             Description = auction.Description,
             CreatedDate = auction.CreatedDate,
             StartingPrice = auction.StartingPrice.ToString(),
+            CurrentPrice = auction.CurrentPrice.ToString(),
             Username = auction.Username,
             EndDate = auction.EndDate,
             IsCompleted = auction.IsCompleted,

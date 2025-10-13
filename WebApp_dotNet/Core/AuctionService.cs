@@ -19,6 +19,12 @@ public class AuctionService : IAuctionService
         return auctions;
     }
 
+    public List<Auction> GetAll()
+    {
+        List<Auction> auctions = _auctionPersistence.GetAll();
+        return auctions;
+    }
+
     public Auction GetById(int auctionId, string username)
     {
         Auction auction = _auctionPersistence.GetById(auctionId, username);
@@ -26,6 +32,13 @@ public class AuctionService : IAuctionService
         return auction;
     }
 
+    public Auction GetById(int auctionId)
+    {
+        Auction auction = _auctionPersistence.GetById(auctionId);
+        if (auction == null) throw new DataException("Auction not found");
+        return auction;
+    }
+    
     public void Add(string username, string title, string description, int startPrice, DateTime endDate)
     {
         if(username == null) throw new ArgumentNullException(nameof(username));
@@ -35,17 +48,6 @@ public class AuctionService : IAuctionService
         _auctionPersistence.Save(auction);
     }
     private static readonly List<Auction> _auctions = new();
-
-    static AuctionService()
-    {
-        // Auction a1 = new Auction(1,  "Clair", "Bob", DateTime.Now);
-        // Auction a2 = new  Auction(2,  "Obscure", "Bob", DateTime.Now);
-        // a1.AddBid(new Core.Bid(1, "Renoir", 120));
-        // a2.AddBid(new Core.Bid(1, "Bob", 200));
-        // a2.AddBid(new Core.Bid(2, "Alice", 300));
-        // _auctions.Add(a1);
-        // _auctions.Add(a2);
-    }
 
     public void Save(Auction auction)
     {

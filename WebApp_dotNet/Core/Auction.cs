@@ -35,6 +35,7 @@ public class Auction
         Username = username;
         Description = description;
         StartingPrice = startingPrice;
+        CurrentPrice = startingPrice;
         EndDate = endDate;
     }
 
