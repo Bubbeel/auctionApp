@@ -1,5 +1,6 @@
 using System.Data;
 using System.Runtime.Serialization;
+using Microsoft.AspNetCore.Server.Kestrel.Transport.Quic;
 using Microsoft.EntityFrameworkCore.Query.Internal;
 using WebApp_dotNet.Core.Interfaces;
 
@@ -54,10 +55,18 @@ public class AuctionService : IAuctionService
         if (amount <= 0) throw new ArgumentOutOfRangeException(nameof(amount));
 
         Bid bid = new Bid(username, amount, auctionId);
-        _auctionPersistence.SaveBid(bid);
         Auction auction = GetById(auctionId);
-        auction.CurrentPrice = amount;
-        _auctionPersistence.UpdateCurrentPrice(auction);
+        if (auction.CurrentPrice < amount)
+        {
+            auction.CurrentPrice = amount;   
+            _auctionPersistence.SaveBid(bid);
+            _auctionPersistence.UpdateCurrentPrice(auction);
+        }
+        else
+        {
+            Console.Out.WriteLine("Invalid Bid");
+            throw new DataException("Invalid bid");
+        }
     }
     
     private static readonly List<Auction> _auctions = new();
