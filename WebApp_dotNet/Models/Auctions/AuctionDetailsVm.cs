@@ -38,7 +38,6 @@ public class AuctionDetailsVm
             Username = auction.Username,
             EndDate = auction.EndDate,
             IsCompleted = auction.IsCompleted,
-
         };
         foreach (var bid in auction.Bids)
         {

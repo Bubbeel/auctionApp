@@ -11,7 +11,7 @@ public class BidVm
     public string Username { get; set; }
 
     [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}")]
-    public DateTime CreatedAt { get; set; }
+    public DateTime DateAdded { get; set; }
     
     public int Amount { get; set; }
     
@@ -25,7 +25,7 @@ public class BidVm
         {
             Id = bid.Id,
             Username = bid.Username,
-            CreatedAt = bid.CreatedAt,
+            DateAdded = bid.DateAdded,
             Amount = bid.Amount
         };
     }

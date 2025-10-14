@@ -9,4 +9,5 @@ public interface IAuctionPersistence
     void SaveAuction(Auction auction);
     void UpdateAuctionDescription(int auctionId, string newDescription);
     void SaveBid(Bid bid);
+    public void UpdateCurrentPrice(Auction auction);
 }

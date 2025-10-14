@@ -56,17 +56,18 @@ public class MySqlAuctionPersitence : IAuctionPersistence
     
     //this is supposed to get the details of the auction we clicked "details" on, so that
     //everybody can see the details of the auction, might be wrong
-    public Auction GetById(int id) 
+    public Auction GetById(int id) //to be done, a bit confused on implementation
     {
         AuctionDb auctionDb = _dbContext.AuctionDbs.Where(a => a.Id == id).FirstOrDefault();
         if (auctionDb == null) throw new Exception("Auction not found");
-        
         Auction auction = _mapper.Map<Auction>(auctionDb);
-        foreach (var bidDb in auctionDb.BidDbs)
+        var bidsDb = _dbContext.BidDbs.Where(b => b.AuctionId == id).OrderByDescending(b => b.Amount).ToList();
+        foreach (var bidDb in bidsDb)
         {
             Bid bid =  _mapper.Map<Bid>(bidDb);
             auction.AddBid(bid);
         }
+        Console.Out.WriteLine("bids: " + auction.Bids.FirstOrDefault());
         return auction;
     }
 
@@ -79,23 +80,20 @@ public class MySqlAuctionPersitence : IAuctionPersistence
 
     public void SaveBid(Bid bid)
     {
-        Console.Out.WriteLine("Before mapper");
         BidDb bidDb = _mapper.Map<BidDb>(bid);
-        Console.Out.WriteLine("After mapper");
         _dbContext.BidDbs.Add(bidDb);
-        Console.Out.WriteLine("Saving to database...");
         _dbContext.SaveChanges();
     }
-    
-    public void UpdateAuctionDescription(int auctionId, string newDescription)
-    {
-        
-        var auctionDb = _dbContext.AuctionDbs.FirstOrDefault(a => a.Id == auctionId);
-        if (auctionDb == null)
-            throw new Exception("Auction not found");
 
-        auctionDb.Description = newDescription;
-        _dbContext.AuctionDbs.Update(auctionDb);
+    public void UpdateCurrentPrice(Auction auction)
+    {
+        var auctionDb = _dbContext.AuctionDbs.FirstOrDefault(a => a.Id == auction.Id);
+        if (auctionDb == null)
+        {
+            throw new Exception($"Auction with ID {auction.Id} not found.");
+        }
+
+        auctionDb.CurrentPrice = auction.CurrentPrice;
         _dbContext.SaveChanges();
     }
     

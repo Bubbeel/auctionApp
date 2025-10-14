@@ -72,6 +72,9 @@
                     <th>
                         <b>Bid Amount</b>
                     </th>
+                    <th>
+                        <b>Bid At</b>
+                    </th>
                     <th></th>
                 </tr>
             </thread>    
@@ -86,7 +89,7 @@
                         @Html.DisplayFor(modelItem => item.Amount)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.CreatedAt)
+                        @Html.DisplayFor(modelItem => item.DateAdded)
                     </td>
                 </tr>
             }

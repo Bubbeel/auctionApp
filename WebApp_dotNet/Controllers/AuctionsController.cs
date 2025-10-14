@@ -106,13 +106,9 @@ namespace WebApp_dotNet.Controllers
             try
             {
                 if (ModelState.IsValid)
-                {
-                    if (createBidVms.Amount > createBidVms.CurrPrice)
-                    {
-                        Console.Out.WriteLine("yuh uh" +  createBidVms.Amount + " and " + createBidVms.CurrPrice + " plus " + createBidVms.AuctionId);
-                        _auctionService.AddBid(createBidVms.AuctionId, User.Identity.Name, createBidVms.Amount);
-                        return RedirectToAction("IndexAll");
-                    }
+                { 
+                    _auctionService.AddBid(createBidVms.AuctionId, User.Identity.Name, createBidVms.Amount);
+                    return RedirectToAction("DetailsNonCreator", new {id = createBidVms.AuctionId});
                 }
             }
             catch
