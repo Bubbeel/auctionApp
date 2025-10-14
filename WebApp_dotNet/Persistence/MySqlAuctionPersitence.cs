@@ -56,7 +56,7 @@ public class MySqlAuctionPersitence : IAuctionPersistence
     
     //this is supposed to get the details of the auction we clicked "details" on, so that
     //everybody can see the details of the auction, might be wrong
-    public Auction GetById(int id) //to be done, a bit confused on implementation
+    public Auction GetById(int id) 
     {
         AuctionDb auctionDb = _dbContext.AuctionDbs.Where(a => a.Id == id).FirstOrDefault();
         if (auctionDb == null) throw new Exception("Auction not found");
@@ -87,5 +87,16 @@ public class MySqlAuctionPersitence : IAuctionPersistence
         _dbContext.SaveChanges();
     }
     
+    public void UpdateAuctionDescription(int auctionId, string newDescription)
+    {
+        
+        var auctionDb = _dbContext.AuctionDbs.FirstOrDefault(a => a.Id == auctionId);
+        if (auctionDb == null)
+            throw new Exception("Auction not found");
+
+        auctionDb.Description = newDescription;
+        _dbContext.AuctionDbs.Update(auctionDb);
+        _dbContext.SaveChanges();
+    }
     
 }

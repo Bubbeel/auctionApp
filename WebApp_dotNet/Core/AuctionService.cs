@@ -57,8 +57,28 @@ public class AuctionService : IAuctionService
         Console.Out.WriteLine("Auction Service is adding bid...");
         _auctionPersistence.SaveBid(bid);
     }
+
+    public void EditDescription(int auctionId, string username, string newDescription)
+    {
+        if (string.IsNullOrWhiteSpace(username))
+            throw new ArgumentNullException(nameof(username));
+        if (string.IsNullOrWhiteSpace(newDescription))
+            throw new ArgumentException("Description cannot be empty.", nameof(newDescription));
+        var auction = _auctionPersistence.GetById(auctionId);
+        if (auction == null)
+            throw new DataException("Auction not found");
+        if (!auction.Username.Equals(username, StringComparison.OrdinalIgnoreCase))
+            throw new UnauthorizedAccessException("You can only edit your own auctions.");
+        
+        _auctionPersistence.UpdateAuctionDescription(auctionId, newDescription);
+    }
     
+
     private static readonly List<Auction> _auctions = new();
+
+    public void UpdateAuctionDescription(int auctionId, string newDescription)
+    {
+    }
 
     public void SaveAuction(Auction auction)
     {

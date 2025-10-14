@@ -10,4 +10,6 @@ public interface IAuctionService : IAuctionPersistence
     void Add(string username, string title, string description, int startPrice, DateTime endDate);
     
     void AddBid(int auctionId, string username, int amount);
+    
+    void EditDescription(int auctionId, string username, string newDescription);
 }

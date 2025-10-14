@@ -121,27 +121,52 @@ namespace WebApp_dotNet.Controllers
             }
             return View(createBidVms);
         }
-
-        // GET: AuctionsController/Edit/5
+        
+// GET: AuctionsController/Edit/5
         public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: AuctionsController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                var auction = _auctionService.GetById(id, User.Identity.Name);
+                if (auction == null) return NotFound();
+
+                // Pass only what's editable (the description)
+                var vm = new EditAuctionVm
+                {
+                    Id = auction.Id,
+                    Title = auction.Title,
+                    Description = auction.Description
+                };
+
+                return View(vm);
             }
             catch
             {
-                return View();
+                return NotFound();
             }
         }
+
+// POST: AuctionsController/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(EditAuctionVm vm)
+        {
+            if (!ModelState.IsValid)
+                return View(vm);
+
+            try
+            {
+                _auctionService.EditDescription(vm.Id, User.Identity.Name, vm.Description);
+                return RedirectToAction(nameof(Details), new { id = vm.Id });
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+                return View(vm);
+            }
+        }
+
+
 
         // GET: AuctionsController/Delete/5
         public ActionResult Delete(int id)
