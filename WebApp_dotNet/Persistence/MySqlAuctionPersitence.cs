@@ -80,13 +80,21 @@ public class MySqlAuctionPersitence : IAuctionPersistence
 
     public void SaveBid(Bid bid)
     {
-        Console.Out.WriteLine("Before mapper");
         BidDb bidDb = _mapper.Map<BidDb>(bid);
-        Console.Out.WriteLine("After mapper");
         _dbContext.BidDbs.Add(bidDb);
-        Console.Out.WriteLine("Saving to database...");
         _dbContext.SaveChanges();
     }
-    
+
+    public void UpdateCurrentPrice(Auction auction)
+    {
+        var auctionDb = _dbContext.AuctionDbs.FirstOrDefault(a => a.Id == auction.Id);
+        if (auctionDb == null)
+        {
+            throw new Exception($"Auction with ID {auction.Id} not found.");
+        }
+
+        auctionDb.CurrentPrice = auction.CurrentPrice;
+        _dbContext.SaveChanges();
+    }
     
 }

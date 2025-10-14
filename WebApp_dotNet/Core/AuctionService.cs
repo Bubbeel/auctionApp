@@ -54,18 +54,26 @@ public class AuctionService : IAuctionService
         if (amount <= 0) throw new ArgumentOutOfRangeException(nameof(amount));
 
         Bid bid = new Bid(username, amount, auctionId);
-        Console.Out.WriteLine("Auction Service is adding bid...");
         _auctionPersistence.SaveBid(bid);
+        Auction auction = GetById(auctionId);
+        auction.CurrentPrice = amount;
+        _auctionPersistence.UpdateCurrentPrice(auction);
     }
     
     private static readonly List<Auction> _auctions = new();
 
     public void SaveAuction(Auction auction)
     {
+        throw new NotImplementedException();
     }
 
     public void SaveBid(Bid bid)
     {
+        throw new NotImplementedException();
     }
-    
+
+    public void UpdateCurrentPrice(Auction auction)
+    {
+        throw new NotImplementedException();
+    }
 }

@@ -8,4 +8,5 @@ public interface IAuctionPersistence
     Auction GetById(int id);
     void SaveAuction(Auction auction);
     void SaveBid(Bid bid);
+    public void UpdateCurrentPrice(Auction auction);
 }
