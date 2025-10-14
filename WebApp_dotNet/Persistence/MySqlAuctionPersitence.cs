@@ -60,13 +60,14 @@ public class MySqlAuctionPersitence : IAuctionPersistence
     {
         AuctionDb auctionDb = _dbContext.AuctionDbs.Where(a => a.Id == id).FirstOrDefault();
         if (auctionDb == null) throw new Exception("Auction not found");
-        
         Auction auction = _mapper.Map<Auction>(auctionDb);
-        foreach (var bidDb in auctionDb.BidDbs)
+        var bidsDb = _dbContext.BidDbs.Where(b => b.AuctionId == id).OrderByDescending(b => b.Amount).ToList();
+        foreach (var bidDb in bidsDb)
         {
             Bid bid =  _mapper.Map<Bid>(bidDb);
             auction.AddBid(bid);
         }
+        Console.Out.WriteLine("bids: " + auction.Bids.FirstOrDefault());
         return auction;
     }
 
