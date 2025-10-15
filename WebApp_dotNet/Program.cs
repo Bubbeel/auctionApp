@@ -5,6 +5,7 @@ using WebApp_dotNet.Persistence;
 using Microsoft.AspNetCore.Identity;
 using WebApp_dotNet.Areas.Identity.Data.WebApp_dotNetUser;
 using WebApp_dotNet.Data;
+using WebApp_dotNet.Filters;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,6 +26,9 @@ builder.Services.AddDefaultIdentity<AppIdentityUser>(options =>
 builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.AddScoped<IAuctionPersistence, MySqlAuctionPersitence>(); 
+
+builder.Services.AddScoped<AuctionEndedFilter>();
+
 
 var app = builder.Build();
 

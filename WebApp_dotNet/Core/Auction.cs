@@ -44,8 +44,12 @@ public class Auction
         _bids.Add(newBid);
     }
     
-    // public bool IsCompleted()
-    // {
-    //     
-    // }
+    public bool AuctionIsFinished()
+    {
+        if (DateTime.Now >= EndDate)
+        {
+            return IsCompleted = true;
+        }
+        return IsCompleted = false;
+    }
 }

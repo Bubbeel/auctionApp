@@ -25,10 +25,29 @@ public class AuctionService : IAuctionService
         List<Auction> auctions = _auctionPersistence.GetAll();
         return auctions;
     }
+    
+    public List<Auction> GetAllNotCompleted()
+    {
+        List<Auction> auctions = _auctionPersistence.GetAllNotCompleted();
+        return auctions;
+    }
+    
+    public List<Auction> GetAllCompleted()
+    {
+        List<Auction> auctions = _auctionPersistence.GetAllCompleted();
+        return auctions;
+    }
 
     public Auction GetById(int auctionId, string username)
     {
         Auction auction = _auctionPersistence.GetById(auctionId, username);
+        if (auction == null) throw new DataException("Auction not found");
+        return auction;
+    }
+
+    public Auction GetByIdNotCompleted(int auctionId)
+    {
+        Auction auction = _auctionPersistence.GetByIdNotCompleted(auctionId);
         if (auction == null) throw new DataException("Auction not found");
         return auction;
     }
@@ -56,16 +75,24 @@ public class AuctionService : IAuctionService
 
         Bid bid = new Bid(username, amount, auctionId);
         Auction auction = GetById(auctionId);
-        if (auction.CurrentPrice < amount)
+        if (username != auction.Username)
         {
-            auction.CurrentPrice = amount;   
-            _auctionPersistence.SaveBid(bid);
-            _auctionPersistence.UpdateCurrentPrice(auction);
+            if (auction.CurrentPrice < amount)
+            {
+                auction.CurrentPrice = amount;   
+                _auctionPersistence.SaveBid(bid);
+                _auctionPersistence.UpdateCurrentPrice(auction);
+            }    
+            else
+            {
+                Console.Out.WriteLine("Invalid Bid");
+                throw new DataException("Invalid bid");
+            }
         }
         else
         {
-            Console.Out.WriteLine("Invalid Bid");
-            throw new DataException("Invalid bid");
+            Console.Out.WriteLine("You can't bid for your own auction");
+            throw new DataException("You can't bid for your own auction");
         }
     }
     
