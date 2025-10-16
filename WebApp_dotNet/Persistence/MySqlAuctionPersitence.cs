@@ -144,6 +144,18 @@ public class MySqlAuctionPersitence : IAuctionPersistence
         _dbContext.BidDbs.Add(bidDb);
         _dbContext.SaveChanges();
     }
+    
+    public void UpdateAuctionDescription(int auctionId, string newDescription)
+    {
+        
+        var auctionDb = _dbContext.AuctionDbs.FirstOrDefault(a => a.Id == auctionId);
+        if (auctionDb == null)
+            throw new Exception("Auction not found");
+
+        auctionDb.Description = newDescription;
+        _dbContext.AuctionDbs.Update(auctionDb);
+        _dbContext.SaveChanges();
+    }
 
     public void UpdateCurrentPrice(Auction auction)
     {
