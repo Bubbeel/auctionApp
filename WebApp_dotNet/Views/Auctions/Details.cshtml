@@ -55,9 +55,19 @@
     </dl>
 </div>
 <div>
-    @Html.ActionLink("Edit Description", "Edit", new { id = Model.Id }) |
-
-    <a asp-action="Index">Back to List</a>
+    @if (Model.Username == User.Identity.Name)
+    {
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit Auction</a>
+        <a asp-action="Index" class="btn btn-outline-secondary">Back</a>
+    }
+    else
+    {
+        if (!Model.IsCompleted)
+        { 
+            <a asp-action="AddBid"    asp-route-AuctionId="@Model.Id" asp-route-currentPrice="@Model.CurrentPrice" class="btn btn-warning">Add Bid</a>   
+        }
+        <a asp-action="IndexAll" class="btn btn-outline-secondary">Back</a>
+    }
 </div>
 
 <p/>

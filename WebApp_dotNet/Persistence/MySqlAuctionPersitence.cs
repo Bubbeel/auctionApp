@@ -18,11 +18,17 @@ public class MySqlAuctionPersitence : IAuctionPersistence
 
     public List<Auction> GetAllByUserName(string userName)
     {
-        var auctionDbs = _dbContext.AuctionDbs.Where(p => p.UserName == userName).ToList();
+        var auctionDbs = _dbContext.AuctionDbs.Where(a => a.UserName == userName).ToList();
         List<Auction> results = new List<Auction>();
         foreach (AuctionDb adb in auctionDbs)
         {
             Auction auction =  _mapper.Map<Auction>(adb);
+            var bidsDb = _dbContext.BidDbs.Where(b => b.AuctionId == auction.Id).OrderByDescending(b => b.Amount).ToList();
+            foreach (var bidDb in bidsDb)
+            {
+                Bid bid =  _mapper.Map<Bid>(bidDb);
+                auction.AddBid(bid);
+            }
             results.Add(auction);
         }
         return results;
@@ -35,6 +41,47 @@ public class MySqlAuctionPersitence : IAuctionPersistence
         foreach (AuctionDb adb in auctionDbs)
         {
             Auction auction = _mapper.Map<Auction>(adb);
+            var bidsDb = _dbContext.BidDbs.Where(b => b.AuctionId == auction.Id).OrderByDescending(b => b.Amount).ToList();
+            foreach (var bidDb in bidsDb)
+            {
+                Bid bid =  _mapper.Map<Bid>(bidDb);
+                auction.AddBid(bid);
+            }
+            results.Add(auction);
+        }
+        return results;
+    }
+    public List<Auction> GetAllNotCompleted()
+    {
+        var auctionDbs = _dbContext.AuctionDbs.Where(a => a.EndDate > DateTime.Now).ToList();
+        List<Auction> results = new List<Auction>();
+        foreach (AuctionDb adb in auctionDbs)
+        {
+            Auction auction = _mapper.Map<Auction>(adb);
+            var bidsDb = _dbContext.BidDbs.Where(b => b.AuctionId == auction.Id).OrderByDescending(b => b.Amount).ToList();
+            foreach (var bidDb in bidsDb)
+            {
+                Bid bid =  _mapper.Map<Bid>(bidDb);
+                auction.AddBid(bid);
+            }
+            results.Add(auction);
+        }
+        return results;
+    }
+    
+    public List<Auction> GetAllCompleted()
+    {
+        var auctionDbs = _dbContext.AuctionDbs.Where(a => a.EndDate <= DateTime.Now).ToList();
+        List<Auction> results = new List<Auction>();
+        foreach (AuctionDb adb in auctionDbs)
+        {
+            Auction auction = _mapper.Map<Auction>(adb);
+            var bidsDb = _dbContext.BidDbs.Where(b => b.AuctionId == auction.Id).OrderByDescending(b => b.Amount).ToList();
+            foreach (var bidDb in bidsDb)
+            {
+                Bid bid =  _mapper.Map<Bid>(bidDb);
+                auction.AddBid(bid);
+            }
             results.Add(auction);
         }
         return results;
@@ -42,7 +89,7 @@ public class MySqlAuctionPersitence : IAuctionPersistence
 
     public Auction GetById(int id, String userName) //to be done, a bit confused on implementation
     {
-        AuctionDb auctionDb = _dbContext.AuctionDbs.Where(a => a.Id == id && a.UserName.Equals(userName)).Include(a => a.BidDbs).FirstOrDefault();
+        AuctionDb auctionDb = _dbContext.AuctionDbs.Where(a => a.Id == id && a.UserName.Equals(userName) && a.EndDate > DateTime.Now).Include(a => a.BidDbs).FirstOrDefault();
         if (auctionDb == null) throw new Exception("Auction not found");
         
         Auction auction = _mapper.Map<Auction>(auctionDb);
@@ -54,8 +101,21 @@ public class MySqlAuctionPersitence : IAuctionPersistence
         return auction;
     }
     
-    //this is supposed to get the details of the auction we clicked "details" on, so that
-    //everybody can see the details of the auction, might be wrong
+    public Auction GetByIdNotCompleted(int id) //to be done, a bit confused on implementation
+    {
+        AuctionDb auctionDb = _dbContext.AuctionDbs.Where(a => a.Id == id && a.EndDate > DateTime.Now).FirstOrDefault();
+        if (auctionDb == null) throw new Exception("Auction not found");
+        Auction auction = _mapper.Map<Auction>(auctionDb);
+        var bidsDb = _dbContext.BidDbs.Where(b => b.AuctionId == id).OrderByDescending(b => b.Amount).ToList();
+        foreach (var bidDb in bidsDb)
+        {
+            Bid bid =  _mapper.Map<Bid>(bidDb);
+            auction.AddBid(bid);
+        }
+        Console.Out.WriteLine("bids: " + auction.Bids.FirstOrDefault());
+        return auction;
+    }
+    
     public Auction GetById(int id) //to be done, a bit confused on implementation
     {
         AuctionDb auctionDb = _dbContext.AuctionDbs.Where(a => a.Id == id).FirstOrDefault();

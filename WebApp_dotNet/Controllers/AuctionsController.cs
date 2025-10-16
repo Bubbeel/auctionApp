@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApp_dotNet.Core;
 using WebApp_dotNet.Core.Interfaces;
+using WebApp_dotNet.Filters;
 using WebApp_dotNet.Models.Auctions;
 
 namespace WebApp_dotNet.Controllers
@@ -24,6 +25,7 @@ namespace WebApp_dotNet.Controllers
             List<AuctionVm> auctionVms = new List<AuctionVm>();
             foreach (Auction auction in auctions)
             {
+                auction.AuctionIsFinished();
                 auctionVms.Add(AuctionVm.FromAuction(auction));
             }
             return View(auctionVms);
@@ -31,11 +33,33 @@ namespace WebApp_dotNet.Controllers
         
         public ActionResult IndexAll()
         {
+            List<Auction> auctions = _auctionService.GetAllNotCompleted();
+            List<AuctionVm> auctionVms = new List<AuctionVm>();
+            foreach (Auction auction in auctions)
+            {
+                auction.AuctionIsFinished();
+                auctionVms.Add(AuctionVm.FromAuction(auction));
+            }
+            return View(auctionVms);
+        }
+        
+        public ActionResult IndexBidFor()
+        {
             List<Auction> auctions = _auctionService.GetAll();
             List<AuctionVm> auctionVms = new List<AuctionVm>();
             foreach (Auction auction in auctions)
             {
-                auctionVms.Add(AuctionVm.FromAuction(auction));
+                auction.AuctionIsFinished();
+                foreach (Bid bid in auction.Bids)
+                {
+                    if (bid.Username == User.Identity.Name)
+                    {
+                        if (!auctionVms.Any(a => a.Id == auction.Id))
+                        {
+                            auctionVms.Add(AuctionVm.FromAuction(auction));
+                        }
+                    }
+                }
             }
             return View(auctionVms);
         }
@@ -43,18 +67,9 @@ namespace WebApp_dotNet.Controllers
         // GET: AuctionsController/Details/5
         public ActionResult Details(int id)
         {
-            Auction auction = _auctionService.GetById(id, User.Identity.Name);
-            if (auction == null) return BadRequest(); //HTTP 400
-            
-            AuctionDetailsVm detailsVM = AuctionDetailsVm.FromAuction(auction);
-            return View(detailsVM);
-        }
-
-        public ActionResult DetailsNonCreator(int id)
-        {
             Auction auction = _auctionService.GetById(id);
-            if (auction == null) return BadRequest();
-            
+            if (auction == null) return BadRequest(); //HTTP 400
+            auction.AuctionIsFinished();
             AuctionDetailsVm detailsVM = AuctionDetailsVm.FromAuction(auction);
             return View(detailsVM);
         }
@@ -80,7 +95,7 @@ namespace WebApp_dotNet.Controllers
                     DateTime endDate = createAuctionVms.EndDate;
                     string username = User.Identity.Name;
                     _auctionService.Add(username, title, description, startPrice, endDate);
-                    return RedirectToAction("Index");
+                    return RedirectToAction("IndexAll");
                 }
                 return View(createAuctionVms);
             }
@@ -90,6 +105,7 @@ namespace WebApp_dotNet.Controllers
             }
         }
 
+        [ServiceFilter(typeof(AuctionEndedFilter))]
         public ActionResult AddBid(int auctionId, int currentPrice)
         {
             CreateBidVms createBidVms = new CreateBidVms();
@@ -101,6 +117,7 @@ namespace WebApp_dotNet.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [ServiceFilter(typeof(AuctionEndedFilter))]
         public ActionResult AddBid(CreateBidVms createBidVms)
         {
             try
@@ -108,7 +125,7 @@ namespace WebApp_dotNet.Controllers
                 if (ModelState.IsValid)
                 { 
                     _auctionService.AddBid(createBidVms.AuctionId, User.Identity.Name, createBidVms.Amount);
-                    return RedirectToAction("DetailsNonCreator", new {id = createBidVms.AuctionId});
+                    return RedirectToAction("Details", new {id = createBidVms.AuctionId});
                 }
             }
             catch
@@ -117,8 +134,9 @@ namespace WebApp_dotNet.Controllers
             }
             return View(createBidVms);
         }
-        
-// GET: AuctionsController/Edit/5
+
+        // GET: AuctionsController/Edit/5
+        [ServiceFilter(typeof(AuctionEndedFilter))]
         public ActionResult Edit(int id)
         {
             try
@@ -142,9 +160,10 @@ namespace WebApp_dotNet.Controllers
             }
         }
 
-// POST: AuctionsController/Edit/5
+        // POST: AuctionsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [ServiceFilter(typeof(AuctionEndedFilter))]
         public ActionResult Edit(EditAuctionVm vm)
         {
             if (!ModelState.IsValid)
@@ -162,9 +181,8 @@ namespace WebApp_dotNet.Controllers
             }
         }
 
-
-
         // GET: AuctionsController/Delete/5
+        [ServiceFilter(typeof(AuctionEndedFilter))]
         public ActionResult Delete(int id)
         {
             return View();
@@ -173,6 +191,7 @@ namespace WebApp_dotNet.Controllers
         // POST: AuctionsController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [ServiceFilter(typeof(AuctionEndedFilter))]
         public ActionResult Delete(int id, IFormCollection collection)
         {
             try
