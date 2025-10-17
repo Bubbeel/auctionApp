@@ -12,4 +12,5 @@ public interface IAuctionService : IAuctionPersistence
     void AddBid(int auctionId, string username, int amount);
     
     void EditDescription(int auctionId, string username, string newDescription);
+    List<Auction> AuctionsWonByUser(string username);
 }

@@ -7,9 +7,6 @@ namespace WebApp_dotNet.Models.Auctions
         [ScaffoldColumn(false)]
         public int Id { get; set; }
 
-        [Display(Name = "Title")]
-        public string Title { get; set; }
-
         [Required]
         [Display(Name = "Description")]
         public string Description { get; set; }

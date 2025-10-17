@@ -110,7 +110,28 @@ public class AuctionService : IAuctionService
         
         _auctionPersistence.UpdateAuctionDescription(auctionId, newDescription);
     }
-    
+    public List<Auction> AuctionsWonByUser(string username)
+    {
+        if (string.IsNullOrEmpty(username))
+            throw new ArgumentNullException(nameof(username));
+
+        var allAuctions = _auctionPersistence.GetAll();
+        var wonAuctions = new List<Auction>();
+
+        foreach (var auction in allAuctions)
+        {
+            if (auction.EndDate <= DateTime.Now)
+            {
+                var highestBid = auction.Bids.OrderByDescending(b => b.Amount).FirstOrDefault();
+                if (highestBid != null && highestBid.Username.Equals(username, StringComparison.OrdinalIgnoreCase))
+                {
+                    wonAuctions.Add(auction);
+                }
+            }
+        }
+
+        return wonAuctions;
+    }
 
     private static readonly List<Auction> _auctions = new();
 

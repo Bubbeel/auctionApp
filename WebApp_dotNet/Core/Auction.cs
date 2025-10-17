@@ -3,22 +3,23 @@ namespace WebApp_dotNet.Core;
 public class Auction
 {
     public int Id { get; set; }
-    
+
     public string Title { get; set; }
-    
+
     public DateTime CreatedDate { get; set; }
-    
+
     public DateTime EndDate { get; set; }
-    
+
     public string Username { get; set; }
-    
+
     public string Description { get; set; }
 
     public int StartingPrice { get; set; }
     public int CurrentPrice { get; set; }
-    public bool IsCompleted { get; set; }
+    
+    public bool IsCompleted => DateTime.Now >= EndDate;
 
-    private List<Bid> _bids = new List<Bid>();
+    private readonly List<Bid> _bids = new();
     public IEnumerable<Bid> Bids => _bids;
 
     public Auction(string title, string username)
@@ -46,10 +47,6 @@ public class Auction
     
     public bool AuctionIsFinished()
     {
-        if (DateTime.Now >= EndDate)
-        {
-            return IsCompleted = true;
-        }
-        return IsCompleted = false;
+        return DateTime.Now >= EndDate;
     }
 }

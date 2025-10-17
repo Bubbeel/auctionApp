@@ -10,14 +10,14 @@ namespace WebApp_dotNet.Controllers
     [Authorize]
     public class AuctionsController : Controller
     {
-        
+
         private IAuctionService _auctionService;
 
         public AuctionsController(IAuctionService auctionService)
         {
             _auctionService = auctionService;
         }
-            
+
         // GET: AuctionsController
         public ActionResult Index()
         {
@@ -28,9 +28,10 @@ namespace WebApp_dotNet.Controllers
                 auction.AuctionIsFinished();
                 auctionVms.Add(AuctionVm.FromAuction(auction));
             }
+
             return View(auctionVms);
         }
-        
+
         public ActionResult IndexAll()
         {
             List<Auction> auctions = _auctionService.GetAllNotCompleted();
@@ -40,9 +41,10 @@ namespace WebApp_dotNet.Controllers
                 auction.AuctionIsFinished();
                 auctionVms.Add(AuctionVm.FromAuction(auction));
             }
+
             return View(auctionVms);
         }
-        
+
         public ActionResult IndexBidFor()
         {
             List<Auction> auctions = _auctionService.GetAll();
@@ -61,6 +63,7 @@ namespace WebApp_dotNet.Controllers
                     }
                 }
             }
+
             return View(auctionVms);
         }
 
@@ -97,6 +100,7 @@ namespace WebApp_dotNet.Controllers
                     _auctionService.Add(username, title, description, startPrice, endDate);
                     return RedirectToAction("IndexAll");
                 }
+
                 return View(createAuctionVms);
             }
             catch //data exception?
@@ -123,15 +127,16 @@ namespace WebApp_dotNet.Controllers
             try
             {
                 if (ModelState.IsValid)
-                { 
+                {
                     _auctionService.AddBid(createBidVms.AuctionId, User.Identity.Name, createBidVms.Amount);
-                    return RedirectToAction("Details", new {id = createBidVms.AuctionId});
+                    return RedirectToAction("Details", new { id = createBidVms.AuctionId });
                 }
             }
             catch
             {
                 return View(createBidVms);
             }
+
             return View(createBidVms);
         }
 
@@ -143,12 +148,9 @@ namespace WebApp_dotNet.Controllers
             {
                 var auction = _auctionService.GetById(id, User.Identity.Name);
                 if (auction == null) return NotFound();
-
-                // Pass only what's editable (the description)
                 var vm = new EditAuctionVm
                 {
                     Id = auction.Id,
-                    Title = auction.Title,
                     Description = auction.Description
                 };
 
@@ -203,5 +205,24 @@ namespace WebApp_dotNet.Controllers
                 return View();
             }
         }
+
+        // GET: AuctionsController/MyWins
+        [ServiceFilter(typeof(AuctionEndedFilter))]
+        public ActionResult MyWins()
+        {
+            try
+            {
+                var username = User.Identity.Name;
+                var auctions = _auctionService.AuctionsWonByUser(username);
+                var auctionVms = auctions.Select(AuctionVm.FromAuction).ToList();
+
+                return View(auctionVms);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return BadRequest();
+            }
+        }
     }
-}
+}    

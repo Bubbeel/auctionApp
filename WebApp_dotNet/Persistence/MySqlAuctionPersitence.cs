@@ -87,7 +87,7 @@ public class MySqlAuctionPersitence : IAuctionPersistence
         return results;
     }
 
-    public Auction GetById(int id, String userName) //to be done, a bit confused on implementation
+    public Auction GetById(int id, String userName) 
     {
         AuctionDb auctionDb = _dbContext.AuctionDbs.Where(a => a.Id == id && a.UserName.Equals(userName) && a.EndDate > DateTime.Now).Include(a => a.BidDbs).FirstOrDefault();
         if (auctionDb == null) throw new Exception("Auction not found");
@@ -101,7 +101,7 @@ public class MySqlAuctionPersitence : IAuctionPersistence
         return auction;
     }
     
-    public Auction GetByIdNotCompleted(int id) //to be done, a bit confused on implementation
+    public Auction GetByIdNotCompleted(int id) 
     {
         AuctionDb auctionDb = _dbContext.AuctionDbs.Where(a => a.Id == id && a.EndDate > DateTime.Now).FirstOrDefault();
         if (auctionDb == null) throw new Exception("Auction not found");
@@ -116,7 +116,7 @@ public class MySqlAuctionPersitence : IAuctionPersistence
         return auction;
     }
     
-    public Auction GetById(int id) //to be done, a bit confused on implementation
+    public Auction GetById(int id)
     {
         AuctionDb auctionDb = _dbContext.AuctionDbs.Where(a => a.Id == id).FirstOrDefault();
         if (auctionDb == null) throw new Exception("Auction not found");
